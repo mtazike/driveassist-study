@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>DriveAssist | Halden</title>
+  <link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body>
+
+  <!-- Shown when the page is opened without a valid study link -->
+  <main id="notice" class="notice" hidden>
+    <p>This page is part of a Texas State University research study and is available only through the study link.</p>
+  </main>
+
+  <div id="site" hidden>
+    <header class="site-header">
+      <div class="wrap">
+        <span class="wordmark" aria-label="Halden">HALDEN</span>
+      </div>
+    </header>
+
+    <main>
+      <!-- HERO -->
+      <section class="hero" aria-labelledby="product-title">
+        <img class="hero-img" src="assets/img/hero.svg" alt="A silver SUV driving on a multi-lane highway at dusk" width="1600" height="640">
+        <div class="wrap hero-text">
+          <h1 id="product-title">DriveAssist</h1>
+          <p class="tagline">Driving assistance for compatible highways.</p>
+          <p class="intro">DriveAssist combines adaptive cruise control and lane centering on limited-access divided highways.</p>
+        </div>
+      </section>
+
+      <!-- WHAT IT DOES (capability section; Condition A statement slot) -->
+      <section class="block" id="what" aria-labelledby="what-title">
+        <div class="wrap">
+          <h2 id="what-title">What DriveAssist Does</h2>
+          <div class="features">
+            <article class="feature" data-track="feature-acc">
+              <svg class="icon" viewBox="0 0 48 48" aria-hidden="true"><path d="M8 34a16 16 0 1 1 32 0" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/><path d="M24 34 32 20" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/><circle cx="24" cy="34" r="2.5" fill="currentColor"/><path d="M12 25l2.4 1.4M24 18v2.8M36 25l-2.4 1.4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+              <h3>Adaptive Cruise Control</h3>
+              <p>Holds a set speed. Slows down to maintain a following distance behind a detected vehicle ahead. Can slow to a stop behind that vehicle and resume when it moves.</p>
+            </article>
+            <article class="feature" data-track="feature-lc">
+              <svg class="icon" viewBox="0 0 48 48" aria-hidden="true"><path d="M12 42 18 6M36 42 30 6" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="5 5"/><rect x="18.5" y="22" width="11" height="15" rx="3" fill="none" stroke="currentColor" stroke-width="2.5"/></svg>
+              <h3>Lane Centering</h3>
+              <p>Applies steering assistance to help center the vehicle in a detected lane, using visible lane markings.</p>
+            </article>
+          </div>
+          <div class="slot" id="slot-main"></div>
+        </div>
+      </section>
+
+      <!-- WHERE IT WORKS -->
+      <section class="block" id="where" aria-labelledby="where-title">
+        <div class="wrap narrow">
+          <h2 id="where-title">Where It Works</h2>
+          <p>DriveAssist is available only on limited-access divided highways, with on- and off-ramps and no intersections. It requires clearly visible lane markings on both sides of the lane. It is not available on city streets or roads with intersections.</p>
+        </div>
+      </section>
+
+      <!-- SYSTEM LIMITATIONS -->
+      <section class="block" id="limits" aria-labelledby="limits-title">
+        <div class="wrap">
+          <h2 id="limits-title">System Limitations</h2>
+          <p class="lead">DriveAssist may not perform correctly in these situations.</p>
+          <div class="limits">
+            <div class="limit">
+              <svg class="icon" viewBox="0 0 48 48" aria-hidden="true"><rect x="8" y="20" width="22" height="12" rx="3" fill="none" stroke="currentColor" stroke-width="2.5"/><circle cx="13" cy="35" r="2.5" fill="currentColor"/><circle cx="25" cy="35" r="2.5" fill="currentColor"/><path d="M38 40V14" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/><path d="M38 8l6 6-6 6-6-6z" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linejoin="round"/></svg>
+              <h3>Road and traffic</h3>
+              <ul>
+                <li>Does not change lanes, take exits, or merge.</li>
+                <li>Does not respond to traffic lights or stop signs.</li>
+                <li>May not respond to stopped vehicles, pedestrians, cyclists, animals, or road debris.</li>
+                <li>Does not recognize work zones or emergency vehicles.</li>
+              </ul>
+            </div>
+            <div class="limit">
+              <svg class="icon" viewBox="0 0 48 48" aria-hidden="true"><path d="M10 42c4-10 8-18 14-24s10-10 12-12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="4 6"/><path d="M22 42c3-8 7-14 12-19" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg>
+              <h3>Lane markings and curves</h3>
+              <ul>
+                <li>May not work with faded, missing, or confusing lane markings.</li>
+                <li>Applies limited steering on sharp curves.</li>
+              </ul>
+            </div>
+            <div class="limit">
+              <svg class="icon" viewBox="0 0 48 48" aria-hidden="true"><path d="M14 30a8 8 0 0 1 1-16 11 11 0 0 1 21 3 7 7 0 0 1-1 13z" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linejoin="round"/><path d="M16 36l-2 5M24 36l-2 5M32 36l-2 5" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg>
+              <h3>Weather and visibility</h3>
+              <ul>
+                <li>May not work correctly in heavy rain, snow, fog, or glare.</li>
+                <li>Requires a clean, unobstructed camera and radar.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- LEARN MORE (Condition B statement slot at top of panel) -->
+      <section class="block" id="learn" aria-labelledby="learn-title">
+        <div class="wrap narrow">
+          <h2 id="learn-title">Learn More</h2>
+          <div class="accordion">
+            <button class="acc-toggle" id="lm-toggle" aria-expanded="false" aria-controls="lm-panel">
+              <span>About DriveAssist</span>
+              <svg class="chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+            <div class="acc-panel" id="lm-panel" role="region" aria-labelledby="lm-toggle" hidden>
+              <div class="slot" id="slot-learn"></div>
+              <div class="faq">
+                <h3>How does DriveAssist work?</h3>
+                <p>DriveAssist combines adaptive cruise control and lane centering. Adaptive cruise control helps maintain a set speed and following distance. Lane centering provides steering assistance using visible lane markings.</p>
+                <h3>Where is DriveAssist available?</h3>
+                <p>On limited-access divided highways with clearly visible lane markings. It is not available on city streets or roads with intersections.</p>
+                <div id="faq-lanes">
+                  <h3>How does DriveAssist detect lanes?</h3>
+                  <p>A camera behind the windshield reads the painted lane markings on both sides of the lane. When markings are faded or hidden, lane centering may not be available.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- CONTINUE -->
+      <section class="block end" id="end">
+        <div class="wrap narrow">
+          <button class="btn-primary" id="continue">Continue to the questions</button>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="wrap"><span>&copy; 2026 Halden Motors</span></div>
+    </footer>
+  </div>
+
+  <!--
+    CANONICAL RESPONSIBILITY STATEMENT (manipulated block).
+    Inserted exactly once by app.js: into #slot-main (Adjacent) or #slot-learn (Separated).
+    Do not edit wording here without updating CANONICAL_STATEMENT in app.js.
+  -->
+  <template id="tpl-statement">
+    <div class="info-card" id="statement" data-block="statement">
+      <p><strong>You are always the driver.</strong> DriveAssist does not make your vehicle self-driving. Keep your hands on the wheel and your eyes on the road. Watch for traffic and hazards the system may not detect. Be ready to steer and brake at any moment, even without a warning.</p>
+    </div>
+  </template>
+
+  <!-- Internal comparison only (layout=swap). Not part of the primary design. -->
+  <template id="tpl-sensor">
+    <div class="info-card" id="sensor" data-block="sensor">
+      <p><strong>DriveAssist uses a camera and a radar.</strong> The camera sits behind the windshield and reads the lane markings ahead. The radar sits in the front of the vehicle. It measures the distance and speed of the vehicle ahead. Together, they guide speed and steering on compatible highways.</p>
+    </div>
+  </template>
+
+  <script src="assets/js/app.js"></script>
+</body>
+</html>

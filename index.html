@@ -31,10 +31,10 @@
     <main>
       <!-- HERO / OVERVIEW -->
       <section class="hero" id="overview" aria-labelledby="product-title">
-        <img class="hero-img" src="assets/img/hero-photo.jpg" alt="A silver SUV driving on a multi-lane highway at dusk" width="1600" height="640">
+        <img class="hero-img" src="assets/img/hero-photo.jpg" alt="Silver crossover vehicle traveling on a divided highway beside mountains and water" width="1600" height="640">
         <div class="hero-shade" aria-hidden="true"></div>
         <div class="wrap hero-text">
-          <span class="hero-eyebrow">HALDEN DRIVER ASSISTANCE TECHNOLOGY</span>
+          <span class="hero-eyebrow">HALDEN TECHNOLOGY</span>
           <h1 id="product-title">DriveAssist</h1>
           <p class="tagline">Driving assistance for compatible highways.</p>
           <a class="hero-cta" href="#features">Explore Features <span aria-hidden="true">&#8595;</span></a>
@@ -114,27 +114,29 @@
         </div>
       </section>
 
-      <!-- LEARN MORE (Condition B statement slot at top of panel) -->
+      <!-- LEARN MORE: four independent, identical FAQ controls in both conditions -->
       <section class="block" id="learn" aria-labelledby="learn-title">
         <div class="wrap narrow">
           <h2 id="learn-title">Learn More</h2>
-          <div class="accordion">
-            <button class="acc-toggle" id="lm-toggle" aria-expanded="false" aria-controls="lm-panel">
-              <span>About DriveAssist</span>
-              <svg class="chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            </button>
-            <div class="acc-panel" id="lm-panel" role="region" aria-labelledby="lm-toggle" hidden>
-              <div class="slot" id="slot-learn"></div>
-              <div class="faq">
-                <h3>How does DriveAssist work?</h3>
-                <p>DriveAssist combines adaptive cruise control and lane centering. Adaptive cruise control helps maintain a set speed and following distance. Lane centering provides steering assistance using visible lane markings.</p>
-                <h3>Where is DriveAssist available?</h3>
-                <p>On limited-access divided highways with clearly visible lane markings. It is not available on city streets or roads with intersections.</p>
-                <div id="faq-lanes">
-                  <h3>How does DriveAssist detect lanes?</h3>
-                  <p>A camera behind the windshield reads the painted lane markings on both sides of the lane. When markings are faded or hidden, lane centering may not be available.</p>
-                </div>
+          <div class="accordion" id="faq-list">
+            <div class="faq-item">
+              <button class="acc-toggle" id="faq1-toggle" aria-expanded="false" aria-controls="faq1-panel"><span>What is DriveAssist?</span><svg class="chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+              <div class="acc-panel" id="faq1-panel" role="region" aria-labelledby="faq1-toggle" hidden>
+                <div class="slot" id="slot-learn"></div>
+                <p>DriveAssist is a driving assistance feature that combines adaptive cruise control and lane centering on compatible highways.</p>
               </div>
+            </div>
+            <div class="faq-item">
+              <button class="acc-toggle" id="faq2-toggle" aria-expanded="false" aria-controls="faq2-panel"><span>How does DriveAssist work?</span><svg class="chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+              <div class="acc-panel" id="faq2-panel" role="region" aria-labelledby="faq2-toggle" hidden><p>DriveAssist combines adaptive cruise control and lane centering. Adaptive cruise control helps maintain a set speed and following distance. Lane centering provides steering assistance using visible lane markings.</p></div>
+            </div>
+            <div class="faq-item">
+              <button class="acc-toggle" id="faq3-toggle" aria-expanded="false" aria-controls="faq3-panel"><span>Where is DriveAssist available?</span><svg class="chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+              <div class="acc-panel" id="faq3-panel" role="region" aria-labelledby="faq3-toggle" hidden><p>On limited-access divided highways with clearly visible lane markings. It is not available on city streets or roads with intersections.</p></div>
+            </div>
+            <div class="faq-item">
+              <button class="acc-toggle" id="faq4-toggle" aria-expanded="false" aria-controls="faq4-panel"><span>How does DriveAssist detect lanes?</span><svg class="chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+              <div class="acc-panel" id="faq4-panel" role="region" aria-labelledby="faq4-toggle" hidden><p>A camera behind the windshield reads the painted lane markings on both sides of the lane. When markings are faded or hidden, lane centering may not be available.</p></div>
             </div>
           </div>
         </div>

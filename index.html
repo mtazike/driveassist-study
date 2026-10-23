@@ -16,34 +16,49 @@
 
   <div id="site" hidden>
     <header class="site-header">
-      <div class="wrap">
-        <span class="wordmark" aria-label="Halden">HALDEN</span>
+      <div class="wrap header-row">
+        <span class="wordmark" aria-label="Halden Motors">HALDEN <small>MOTORS</small></span>
+        <nav class="section-nav" aria-label="Page sections">
+          <a href="#overview">Overview</a>
+          <a href="#features">Features</a>
+          <a href="#where">Where It Works</a>
+        </nav>
       </div>
     </header>
 
+    <div class="wrap breadcrumb" aria-label="Breadcrumb">Home <span aria-hidden="true">&rsaquo;</span> Technology <span aria-hidden="true">&rsaquo;</span> DriveAssist</div>
+
     <main>
-      <!-- HERO -->
-      <section class="hero" aria-labelledby="product-title">
-        <img class="hero-img" src="assets/img/hero.svg" alt="A silver SUV driving on a multi-lane highway at dusk" width="1600" height="640">
+      <!-- HERO / OVERVIEW -->
+      <section class="hero" id="overview" aria-labelledby="product-title">
+        <img class="hero-img" src="assets/img/hero-photo.jpg" alt="A silver SUV driving on a multi-lane highway at dusk" width="1600" height="640">
+        <div class="hero-shade" aria-hidden="true"></div>
         <div class="wrap hero-text">
+          <span class="hero-eyebrow">HALDEN DRIVER ASSISTANCE TECHNOLOGY</span>
           <h1 id="product-title">DriveAssist</h1>
           <p class="tagline">Driving assistance for compatible highways.</p>
-          <p class="intro">DriveAssist combines adaptive cruise control and lane centering on limited-access divided highways.</p>
+          <a class="hero-cta" href="#features">Explore Features <span aria-hidden="true">&#8595;</span></a>
+        </div>
+      </section>
+
+      <section class="block intro-block">
+        <div class="wrap">
+          <p class="lead">DriveAssist combines adaptive cruise control and lane centering on limited-access divided highways.</p>
         </div>
       </section>
 
       <!-- WHAT IT DOES (capability section; Condition A statement slot) -->
-      <section class="block" id="what" aria-labelledby="what-title">
+      <section class="block" id="features" aria-labelledby="what-title">
         <div class="wrap">
           <h2 id="what-title">What DriveAssist Does</h2>
           <div class="features">
-            <article class="feature" data-track="feature-acc">
-              <svg class="icon" viewBox="0 0 48 48" aria-hidden="true"><path d="M8 34a16 16 0 1 1 32 0" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/><path d="M24 34 32 20" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/><circle cx="24" cy="34" r="2.5" fill="currentColor"/><path d="M12 25l2.4 1.4M24 18v2.8M36 25l-2.4 1.4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+            <article class="feature">
+              <figure class="diagram-frame"><img class="feature-photo" src="assets/img/acc-photo.jpg" alt="Illustration of two vehicles on a highway with a following-distance visualization"></figure>
               <h3>Adaptive Cruise Control</h3>
               <p>Holds a set speed. Slows down to maintain a following distance behind a detected vehicle ahead. Can slow to a stop behind that vehicle and resume when it moves.</p>
             </article>
-            <article class="feature" data-track="feature-lc">
-              <svg class="icon" viewBox="0 0 48 48" aria-hidden="true"><path d="M12 42 18 6M36 42 30 6" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="5 5"/><rect x="18.5" y="22" width="11" height="15" rx="3" fill="none" stroke="currentColor" stroke-width="2.5"/></svg>
+            <article class="feature">
+              <figure class="diagram-frame"><img class="feature-photo" src="assets/img/lane-photo.jpg" alt="Illustration of a vehicle between highlighted lane markings"></figure>
               <h3>Lane Centering</h3>
               <p>Applies steering assistance to help center the vehicle in a detected lane, using visible lane markings.</p>
             </article>
@@ -54,9 +69,12 @@
 
       <!-- WHERE IT WORKS -->
       <section class="block" id="where" aria-labelledby="where-title">
-        <div class="wrap narrow">
-          <h2 id="where-title">Where It Works</h2>
-          <p>DriveAssist is available only on limited-access divided highways, with on- and off-ramps and no intersections. It requires clearly visible lane markings on both sides of the lane. It is not available on city streets or roads with intersections.</p>
+        <div class="wrap split">
+          <div>
+            <h2 id="where-title">Where It Works</h2>
+            <p>DriveAssist is available only on limited-access divided highways, with on- and off-ramps and no intersections. It requires clearly visible lane markings on both sides of the lane. It is not available on city streets or roads with intersections.</p>
+          </div>
+          <figure class="diagram-frame"><img class="feature-photo" src="assets/img/highway-photo.jpg" alt="Divided highway with multiple lanes and an exit sign"></figure>
         </div>
       </section>
 
@@ -124,14 +142,17 @@
 
       <!-- CONTINUE -->
       <section class="block end" id="end">
-        <div class="wrap narrow">
+        <div class="wrap">
           <button class="btn-primary" id="continue">Continue to the questions</button>
         </div>
       </section>
     </main>
 
     <footer class="site-footer">
-      <div class="wrap"><span>&copy; 2026 Halden Motors</span></div>
+      <div class="wrap footer-row">
+        <span class="wordmark small">HALDEN <small>MOTORS</small></span>
+        <span>&copy; 2026 Halden Motors</span>
+      </div>
     </footer>
   </div>
 
@@ -146,13 +167,14 @@
     </div>
   </template>
 
-  <!-- Internal comparison only (layout=swap). Not part of the primary design. -->
+  <!-- Internal comparison only (layout=swap, development builds). Not part of the primary design. -->
   <template id="tpl-sensor">
     <div class="info-card" id="sensor" data-block="sensor">
       <p><strong>DriveAssist uses a camera and a radar.</strong> The camera sits behind the windshield and reads the lane markings ahead. The radar sits in the front of the vehicle. It measures the distance and speed of the vehicle ahead. Together, they guide speed and steering on compatible highways.</p>
     </div>
   </template>
 
+  <script src="assets/js/config.js"></script>
   <script src="assets/js/app.js"></script>
 </body>
 </html>

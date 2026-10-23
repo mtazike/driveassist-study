@@ -1,0 +1,72 @@
+<!-- Source for the three inline diagrams used in index.html (kept here for editing). -->
+<!-- 1. Following distance (Adaptive Cruise Control) -->
+<svg class="diagram" viewBox="0 0 640 360" role="img" aria-label="Diagram: a vehicle following another vehicle at a set distance in the same lane">
+  <rect width="640" height="360" fill="#f2f4f6"/>
+  <rect x="155" y="0" width="330" height="360" fill="#d3d9de"/>
+  <path d="M155 0V360M485 0V360" stroke="#ffffff" stroke-width="4"/>
+  <path d="M265 0V360M375 0V360" stroke="#ffffff" stroke-width="3" stroke-dasharray="22 18"/>
+  <!-- lead vehicle -->
+  <g transform="translate(320 70)">
+    <rect x="-22" y="-42" width="44" height="84" rx="12" fill="#6b7680"/>
+    <path d="M-16 -22h32l-4 14h-24z" fill="#3a4650"/>
+    <path d="M-15 24h30l-3 10h-24z" fill="#3a4650"/>
+  </g>
+  <!-- DriveAssist vehicle -->
+  <g transform="translate(320 270)">
+    <rect x="-22" y="-42" width="44" height="84" rx="12" fill="#c3cbd2" stroke="#1d5c63" stroke-width="2.5"/>
+    <path d="M-16 -22h32l-4 14h-24z" fill="#2b3a47"/>
+    <path d="M-15 24h30l-3 10h-24z" fill="#2b3a47"/>
+  </g>
+  <!-- distance bracket -->
+  <g stroke="#1d5c63" stroke-width="2.5" fill="none" stroke-linecap="round">
+    <path d="M396 116V224"/>
+    <path d="M388 116h16M388 224h16"/>
+  </g>
+  <text x="414" y="166" fill="#15212b" font-family="Archivo, system-ui, sans-serif" font-size="17" font-weight="600">Following</text>
+  <text x="414" y="188" fill="#15212b" font-family="Archivo, system-ui, sans-serif" font-size="17" font-weight="600">distance</text>
+</svg>
+
+<!-- 2. Lane position (Lane Centering) -->
+<svg class="diagram" viewBox="0 0 640 360" role="img" aria-label="Diagram: a vehicle positioned in the center of its lane between the lane markings">
+  <rect width="640" height="360" fill="#f2f4f6"/>
+  <rect x="155" y="0" width="330" height="360" fill="#d3d9de"/>
+  <path d="M155 0V360M485 0V360" stroke="#ffffff" stroke-width="4"/>
+  <path d="M265 0V360M375 0V360" stroke="#ffffff" stroke-width="3" stroke-dasharray="22 18"/>
+  <g transform="translate(320 196)">
+    <rect x="-22" y="-42" width="44" height="84" rx="12" fill="#c3cbd2" stroke="#1d5c63" stroke-width="2.5"/>
+    <path d="M-16 -22h32l-4 14h-24z" fill="#2b3a47"/>
+    <path d="M-15 24h30l-3 10h-24z" fill="#2b3a47"/>
+  </g>
+  <!-- equal gaps to both lane markings -->
+  <g stroke="#1d5c63" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M270 196h24M346 196h24"/>
+    <path d="M276 189l-7 7 7 7M288 189l7 7-7 7" />
+    <path d="M352 189l-7 7 7 7M364 189l7 7-7 7" />
+  </g>
+  <text x="320" y="70" text-anchor="middle" fill="#15212b" font-family="Archivo, system-ui, sans-serif" font-size="17" font-weight="600">Lane markings on both sides</text>
+  <path d="M240 80l22 28M400 80l-22 28" stroke="#1d5c63" stroke-width="2" fill="none" stroke-linecap="round"/>
+</svg>
+
+<!-- 3. Divided highway with on-ramp (Where It Works) -->
+<svg class="diagram" viewBox="0 0 640 360" role="img" aria-label="Diagram: a divided highway with a center median and an on-ramp joining from the side">
+  <rect width="640" height="360" fill="#f2f4f6"/>
+  <!-- on-ramp -->
+  <path d="M640 330 C 560 300 520 250 500 190 L 470 120" stroke="#d3d9de" stroke-width="46" fill="none"/>
+  <!-- left carriageway -->
+  <rect x="110" y="0" width="170" height="360" fill="#d3d9de"/>
+  <!-- median -->
+  <rect x="280" y="0" width="40" height="360" fill="#c9d6c4"/>
+  <!-- right carriageway -->
+  <rect x="320" y="0" width="170" height="360" fill="#d3d9de"/>
+  <g stroke="#ffffff" stroke-width="4"><path d="M110 0V360M280 0V360M320 0V360M490 0V120"/></g>
+  <g stroke="#ffffff" stroke-width="3" stroke-dasharray="22 18"><path d="M195 0V360M405 0V360"/></g>
+  <g fill="#15212b" font-family="Archivo, system-ui, sans-serif" font-size="17" font-weight="600">
+    <text x="300" y="30" text-anchor="middle">Median</text>
+    <text x="548" y="236">On-ramp</text>
+  </g>
+  <!-- direction arrows -->
+  <g fill="none" stroke="#56636e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M152 140v60M144 192l8 8 8-8"/>
+    <path d="M448 220v-60M440 168l8-8 8 8"/>
+  </g>
+</svg>

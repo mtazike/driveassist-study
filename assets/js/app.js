@@ -8,8 +8,8 @@
     mode    window (default): participant clicks Continue and returns to Qualtrics via `ret`
             embed: page runs inside a Qualtrics question; data is sent to the survey with postMessage
     ret     Qualtrics return URL (window mode only; must be https://*.qualtrics.com)
-    test    1 = show the test panel (research team only)
-    layout  shift (default) | swap  (internal comparison only; not the primary design)
+    test    1 = show the test panel (development builds only; see assets/js/config.js)
+    layout  shift (default) | swap  (internal comparison, development builds only)
 
   Data collected (no personal information):
     cond, layout, rid, time_on_page_ms, tab_hidden_ms,
@@ -28,11 +28,12 @@
   // for a manual review of meaning.
   var BANNED = /\b(must|should|keep|keeps|watch|watches|monitor|monitors|attention|attentive|supervis\w*|ready|take control|intervene|responsib\w*|hands?|eyes?|self-driving|driver|drivers|you|your|relax\w*|effortless\w*|takes over|autonomous|semi-autonomous|hands-free|look(s)? out|protect\w*|warn\w*|alert\w*|safe|safety|stress\w*)\b/gi;
 
+  var DEV = !!(window.DA_CONFIG && window.DA_CONFIG.dev);
   var params = new URLSearchParams(window.location.search);
   var cond = params.get("c") === "1" ? "A" : params.get("c") === "2" ? "B" : null;
-  var layout = params.get("layout") === "swap" ? "swap" : "shift";
+  var layout = DEV && params.get("layout") === "swap" ? "swap" : "shift";
   var mode = params.get("mode") === "embed" ? "embed" : "window";
-  var testMode = params.get("test") === "1";
+  var testMode = DEV && params.get("test") === "1"; // never available in the participant version
   var rid = (params.get("rid") || "").replace(/[^A-Za-z0-9_-]/g, "").slice(0, 64);
   var ret = validReturnUrl(params.get("ret"));
 

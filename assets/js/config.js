@@ -1,2 +1,2 @@
-/* Set dev to false for the participant version: this disables the test panel and the swap layout. */
-window.DA_CONFIG = { dev: true };
+/* Set dev:false before approved participant deployment. */
+window.DA_CONFIG = { dev: true, build: "v4.0-dev" };

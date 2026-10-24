@@ -1,218 +1,91 @@
-/*
-  DriveAssist study stimulus — condition setup and interaction logging.
-
-  URL parameters
-    c       1 = Adjacent (statement in capability section)
-            2 = Separated (statement at top of the Learn More panel)
-    rid     Qualtrics response/session code to link records (letters, digits, - _ only)
-    mode    window (default): participant clicks Continue and returns to Qualtrics via `ret`
-            embed: page runs inside a Qualtrics question; data is sent to the survey with postMessage
-    ret     Qualtrics return URL (window mode only; must be https://*.qualtrics.com)
-    test    1 = show the test panel (development builds only; see assets/js/config.js)
-    layout  shift (default) | swap  (internal comparison, development builds only)
-
-  Data collected (no personal information):
-    cond, layout, rid, time_on_page_ms, tab_hidden_ms,
-    lm_opens, lm_first_open_ms, lm_open_ms, completed
-*/
-(function () {
-  "use strict";
-
-  var CANONICAL_STATEMENT =
-    "You are always the driver. DriveAssist does not make your vehicle self-driving. " +
-    "Keep your hands on the wheel and your eyes on the road. Watch for traffic and hazards " +
-    "the system may not detect. Be ready to steer and brake at any moment, even without a warning.";
-
-  // Words that must not appear outside the statement (driver-obligation, autonomy,
-  // reduced-effort and "system watches for you" language). A guardrail, not a substitute
-  // for a manual review of meaning.
-  var BANNED = /\b(must|should|keep|keeps|watch|watches|monitor|monitors|attention|attentive|supervis\w*|ready|take control|intervene|responsib\w*|hands?|eyes?|self-driving|driver|drivers|you|your|relax\w*|effortless\w*|takes over|autonomous|semi-autonomous|hands-free|look(s)? out|protect\w*|warn\w*|alert\w*|safe|safety|stress\w*)\b/gi;
-
-  var DEV = !!(window.DA_CONFIG && window.DA_CONFIG.dev);
-  var params = new URLSearchParams(window.location.search);
-  var cond = params.get("c") === "1" ? "A" : params.get("c") === "2" ? "B" : null;
-  var layout = DEV && params.get("layout") === "swap" ? "swap" : "shift";
-  var mode = params.get("mode") === "embed" ? "embed" : "window";
-  var testMode = DEV && params.get("test") === "1"; // never available in the participant version
-  var rid = (params.get("rid") || "").replace(/[^A-Za-z0-9_-]/g, "").slice(0, 64);
-  var ret = validReturnUrl(params.get("ret"));
-
-  // ---------- No valid study link: show the notice only ----------
-  if (!cond) {
-    document.getElementById("notice").hidden = false;
-    return;
-  }
-  document.getElementById("site").hidden = false;
-
-  // ---------- Place the blocks ----------
-  var slotMain = document.getElementById("slot-main");
-  var slotLearn = document.getElementById("slot-learn");
-  var statement = cloneTemplate("tpl-statement");
-  (cond === "A" ? slotMain : slotLearn).appendChild(statement);
-
-  if (layout === "swap") {
-    var sensor = cloneTemplate("tpl-sensor");
-    (cond === "A" ? slotLearn : slotMain).appendChild(sensor);
-    var faqLanes = document.getElementById("faq-lanes");
-    if (faqLanes) faqLanes.remove(); // the sensor card covers this content
-  }
-
-  if (mode === "embed") {
-    document.getElementById("end").hidden = true; // Qualtrics provides its own Next button
-  }
-
-  // ---------- Logging ----------
-  var t0 = performance.now();
-  var state = {
-    lmOpens: 0,
-    lmFirstOpenMs: -1,
-    lmOpenMs: 0,
-    lmOpenSince: null,
-    hiddenMs: 0,
-    hiddenSince: document.hidden ? performance.now() : null,
-    completed: false
-  };
-
-  function now() { return performance.now(); }
-
-  function payload() {
-    var t = now();
-    var openMs = state.lmOpenMs + (state.lmOpenSince !== null ? t - state.lmOpenSince : 0);
-    var hiddenMs = state.hiddenMs + (state.hiddenSince !== null ? t - state.hiddenSince : 0);
-    return {
-      cond: cond,
-      layout: layout,
-      rid: rid,
-      time_on_page_ms: Math.round(t - t0),
-      tab_hidden_ms: Math.round(hiddenMs),
-      lm_opens: state.lmOpens,
-      lm_first_open_ms: state.lmFirstOpenMs,
-      lm_open_ms: Math.round(openMs),
-      completed: state.completed
-    };
-  }
-
-  // Learn More accordion
-  var toggle = document.getElementById("lm-toggle");
-  var panel = document.getElementById("lm-panel");
-  toggle.addEventListener("click", function () {
-    var open = toggle.getAttribute("aria-expanded") !== "true";
-    toggle.setAttribute("aria-expanded", String(open));
-    panel.hidden = !open;
-    var t = now();
-    if (open) {
-      state.lmOpens += 1;
-      if (state.lmFirstOpenMs < 0) state.lmFirstOpenMs = Math.round(t - t0);
-      state.lmOpenSince = t;
-    } else if (state.lmOpenSince !== null) {
-      state.lmOpenMs += t - state.lmOpenSince;
-      state.lmOpenSince = null;
-    }
-    send();
-  });
-
-  // Time the tab was hidden (data quality)
-  document.addEventListener("visibilitychange", function () {
-    var t = now();
-    if (document.hidden) {
-      state.hiddenSince = t;
-    } else if (state.hiddenSince !== null) {
-      state.hiddenMs += t - state.hiddenSince;
-      state.hiddenSince = null;
-    }
-  });
-
-  // Continue button (window mode)
-  var cont = document.getElementById("continue");
-  cont.addEventListener("click", function () {
-    state.completed = true;
-    var data = payload();
-    if (ret) {
-      var url = new URL(ret);
-      Object.keys(data).forEach(function (k) { url.searchParams.set(k, String(data[k])); });
-      window.location.href = url.toString();
-    } else if (testMode) {
-      renderTest("Continue clicked (no return URL in test mode).");
-    } else {
-      cont.disabled = true;
-      cont.textContent = "Study link error: please return to the survey tab.";
-    }
-  });
-
-  // Embed mode: send data to the Qualtrics page that contains this one
-  var parentOrigin = qualtricsOrigin(document.referrer);
-  function send() {
-    if (mode !== "embed" || window.parent === window) return;
-    if (parentOrigin) window.parent.postMessage({ type: "driveassist", data: payload() }, parentOrigin);
-  }
-  if (mode === "embed") {
-    setInterval(send, 5000);
-    window.addEventListener("pagehide", send);
-    send();
-  }
-
-  // ---------- Test panel ----------
-  var testBox = null;
-  if (testMode) {
-    testBox = document.createElement("aside");
-    testBox.className = "test-panel";
-    document.body.appendChild(testBox);
-    setInterval(function () { renderTest(); }, 500);
-    renderTest();
-  }
-
-  function renderTest(note) {
-    if (!testBox) return;
-    var d = payload();
-    var stmts = document.querySelectorAll('[data-block="statement"]');
-    var stmtText = stmts.length ? norm(stmts[0].textContent) : "";
-    var textOk = stmtText === norm(CANONICAL_STATEMENT);
-    var where = stmts.length ? stmts[0].parentElement.id : "none";
-    var hits = bannedOutsideStatement();
-    var learnTop = Math.round(document.getElementById("learn").getBoundingClientRect().top + window.scrollY);
-    var pageH = document.documentElement.scrollHeight;
-    testBox.innerHTML =
-      "<b>TEST MODE</b> &middot; condition " + cond + " &middot; layout " + layout + " &middot; " + mode + "<hr>" +
-      "<b>Integrity checks</b><br>" +
-      mark(stmts.length === 1) + " statement appears " + stmts.length + " time(s)<br>" +
-      mark(textOk) + " wording matches canonical text<br>" +
-      "&nbsp;&nbsp;&nbsp;location: #" + where + "<br>" +
-      mark(hits.length === 0) + " banned words outside statement: " + (hits.length ? hits.join(", ") : "none") + "<hr>" +
-      "<b>Layout</b><br>" +
-      "Learn More section starts at y = " + learnTop + " px<br>" +
-      "page height = " + pageH + " px<hr>" +
-      "<b>Logged data</b><br>" +
-      Object.keys(d).map(function (k) { return k + ": " + d[k]; }).join("<br>") +
-      (ret ? "<hr>return URL: valid" : "<hr>return URL: none") +
-      (note ? "<hr>" + note : "");
-  }
-
-  function bannedOutsideStatement() {
-    var site = document.getElementById("site").cloneNode(true);
-    site.querySelectorAll('[data-block="statement"], script, template').forEach(function (n) { n.remove(); });
-    var text = site.textContent || "";
-    var found = {};
-    (text.match(BANNED) || []).forEach(function (w) { found[w.toLowerCase()] = true; });
-    return Object.keys(found);
-  }
-
-  // ---------- Helpers ----------
-  function cloneTemplate(id) {
-    return document.getElementById(id).content.firstElementChild.cloneNode(true);
-  }
-  function norm(s) { return String(s).replace(/\s+/g, " ").trim(); }
-  function mark(ok) { return ok ? '<span class="ok">PASS</span>' : '<span class="bad">FAIL</span>'; }
-  function validReturnUrl(s) {
-    if (!s) return null;
-    try {
-      var u = new URL(s);
-      return u.protocol === "https:" && /(^|\.)qualtrics\.com$/i.test(u.hostname) ? u.toString() : null;
-    } catch (e) { return null; }
-  }
-  function qualtricsOrigin(ref) {
-    try {
-      var u = new URL(ref);
-      return u.protocol === "https:" && /(^|\.)qualtrics\.com$/i.test(u.hostname) ? u.origin : null;
-    } catch (e) { return null; }
-  }
+/* DriveAssist v4 development instrumentation. Static hosting; no server-side collection. */
+(function(){
+'use strict';
+const CANONICAL='You are always the driver. DriveAssist does not make your vehicle self-driving. Keep your hands on the wheel and your eyes on the road. Watch for traffic and hazards the system may not detect. Be ready to steer and brake at any moment, even without a warning.';
+const DEV=!!(window.DA_CONFIG&&window.DA_CONFIG.dev), BUILD=(window.DA_CONFIG&&window.DA_CONFIG.build)||'v4';
+const p=new URLSearchParams(location.search), condition=p.get('c')==='1'?'A':p.get('c')==='2'?'B':null;
+const test=DEV&&p.get('test')==='1', mode=p.get('mode')==='embed'?'embed':'window';
+const rid=(p.get('rid')||'').replace(/[^A-Za-z0-9_-]/g,'').slice(0,64);
+const layout=DEV&&p.get('layout')==='swap'?'swap':'shift';
+const imgHeight=DEV&&p.get('img')==='230'?'230':'270';
+const notice=document.getElementById('notice'), site=document.getElementById('site');
+if(!condition){notice.hidden=false;return;}
+site.hidden=false; document.body.dataset.imgHeight=imgHeight;
+const clone=id=>document.getElementById(id).content.firstElementChild.cloneNode(true);
+const stmt=clone('tpl-statement'); document.getElementById(condition==='A'?'slot-main':'slot-learn').appendChild(stmt);
+if(layout==='swap'){
+ document.getElementById(condition==='A'?'slot-learn':'slot-main').appendChild(clone('tpl-sensor'));
+}
+if(mode==='embed') document.getElementById('end').hidden=true;
+const t0=performance.now(), now=()=>performance.now(), dt=()=>Math.round(now()-t0);
+const state={hidden_ms:0,hidden_since:document.hidden?now():null,completed:0,scroll_max:0,faqOpen:[0,0,0,0],faqEver:[0,0,0,0],faqFirst:[-1,-1,-1,-1],faqTotal:0,faqOpenMs:[0,0,0,0],faqOpenSince:[null,null,null,null],reentry:0,reloads:0};
+const names=['statement','acc','lane','features','where','limits','learn'];
+const els={statement:stmt,acc:document.querySelector('.features .feature:nth-child(1) p'),lane:document.querySelector('.features .feature:nth-child(2) p'),features:document.getElementById('features'),where:document.getElementById('where'),limits:document.getElementById('limits'),learn:document.getElementById('learn')};
+const vis={};names.forEach(n=>vis[n]={intersection:0,activeSince:null,total:0,first:-1});
+function visibleTab(){return !document.hidden&&document.visibilityState==='visible';}
+function settle(n,t){const v=vis[n];if(v.activeSince!==null){v.total+=Math.max(0,t-v.activeSince);v.activeSince=null;}}
+function sync(n,t){const v=vis[n], qualifies=visibleTab()&&v.intersection>=.5&&els[n].getClientRects().length>0;
+ if(qualifies&&v.activeSince===null){v.activeSince=t;if(v.first<0)v.first=Math.round(t-t0);}else if(!qualifies)settle(n,t);
+}
+const observer=new IntersectionObserver(entries=>{const t=now();entries.forEach(e=>{const n=e.target.dataset.observe;vis[n].intersection=e.intersectionRatio;sync(n,t);});},{threshold:[0,.5,1]});
+names.forEach(n=>{els[n].dataset.observe=n;observer.observe(els[n]);});
+function syncAll(){const t=now();names.forEach(n=>sync(n,t));}
+function tick(){syncAll();const t=now();for(let i=0;i<4;i++){
+ if(state.faqOpen[i]&&visibleTab()&&state.faqOpenSince[i]===null)state.faqOpenSince[i]=t;
+ if((!state.faqOpen[i]||!visibleTab())&&state.faqOpenSince[i]!==null){state.faqOpenMs[i]+=t-state.faqOpenSince[i];state.faqOpenSince[i]=null;}
+}}
+function snapshot(n){const v=vis[n];return Math.round(v.total+(v.activeSince!==null?now()-v.activeSince:0));}
+function scrollPct(){const total=Math.max(1,document.documentElement.scrollHeight-innerHeight);return Math.min(100,Math.round(100*scrollY/total));}
+function onScroll(){state.scroll_max=Math.max(state.scroll_max,scrollPct());}
+addEventListener('scroll',onScroll,{passive:true});addEventListener('resize',()=>{syncAll();onScroll();});
+for(let i=1;i<=4;i++){
+ const btn=document.getElementById(`faq${i}-toggle`),panel=document.getElementById(`faq${i}-panel`),idx=i-1;
+ btn.addEventListener('click',()=>{
+  const open=btn.getAttribute('aria-expanded')!=='true';btn.setAttribute('aria-expanded',String(open));panel.hidden=!open;
+  state.faqOpen[idx]=open?1:0;
+  if(open){state.faqTotal++;state.faqEver[idx]=1;if(state.faqFirst[idx]<0)state.faqFirst[idx]=dt();}
+  tick();syncAll();send();
+ });
+}
+document.addEventListener('visibilitychange',()=>{
+ const t=now();if(document.hidden){state.hidden_since=t;}else if(state.hidden_since!==null){state.hidden_ms+=t-state.hidden_since;state.hidden_since=null;}
+ tick();syncAll();
+});
+function storeGet(k){try{return sessionStorage.getItem(k);}catch(e){return null;}}
+function storeSet(k,v){try{sessionStorage.setItem(k,v);}catch(e){}}
+const key='da_v4_'+rid+'_'+condition;
+let visit=Number(storeGet(key)||'0');state.reloads=visit>0?visit:0;storeSet(key,String(visit+1));
+addEventListener('pageshow',e=>{if(e.persisted){state.reentry++;tick();syncAll();}});
+const nav=performance.getEntriesByType('navigation');if(nav.length&&nav[0].type==='reload')state.reloads=Math.max(state.reloads,1);
+function payload(){tick();onScroll();const t=now();const hidden=state.hidden_ms+(state.hidden_since!==null?t-state.hidden_since:0);
+ const d={cond:condition,build:BUILD,layout:layout,rid:rid,time_on_page_ms:dt(),tab_hidden_ms:Math.round(hidden),completed:state.completed,
+ stmt_visible_ms:snapshot('statement'),stmt_first_visible_ms:vis.statement.first,stmt_seen:snapshot('statement')>=1000?1:0,
+ acc_seen:snapshot('acc')>=1000?1:0,lane_seen:snapshot('lane')>=1000?1:0,
+ reach_features:snapshot('features')>=1000?1:0,reach_where:snapshot('where')>=1000?1:0,reach_limits:snapshot('limits')>=1000?1:0,reach_learn:snapshot('learn')>=1000?1:0,
+ max_scroll_pct:state.scroll_max,vw:innerWidth,vh:innerHeight,reloads:state.reloads,reentry_count:state.reentry,
+ faq_open_count:state.faqTotal,faq_unique_opened:state.faqEver.reduce((a,b)=>a+b,0),faq1_first_open_ms:state.faqFirst[0]};
+ for(let i=0;i<4;i++){d['faq'+(i+1)+'_opened']=state.faqEver[i];d['faq'+(i+1)+'_open_ms']=Math.round(state.faqOpenMs[i]+(state.faqOpenSince[i]!==null?t-state.faqOpenSince[i]:0));}
+ d.lm_opens=d.faq_open_count;d.lm_first_open_ms=d.faq1_first_open_ms;d.lm_open_ms=d.faq1_open_ms;
+ return d;
+}
+function qualtricsURL(raw){try{const u=new URL(raw);return u.protocol==='https:'&&/(^|\.)qualtrics\.com$/i.test(u.hostname)?u:null;}catch(e){return null;}}
+// A second survey URL is configured externally. Never put a Prolific ID in this URL.
+const ret=qualtricsURL(p.get('ret'));
+const btn=document.getElementById('continue');btn.addEventListener('click',()=>{
+ state.completed=1;const d=payload();if(ret){Object.entries(d).forEach(([k,v])=>ret.searchParams.set(k,String(v)));location.assign(ret.toString());}
+ else if(test){renderTest('Continue clicked; no return URL provided.');}
+ else{state.completed=0;btn.disabled=true;btn.textContent='Survey return link unavailable';}
+});
+let parentOrigin=null;try{const u=new URL(document.referrer);if(u.protocol==='https:'&&/(^|\.)qualtrics\.com$/i.test(u.hostname))parentOrigin=u.origin;}catch(e){}
+function send(){if(mode==='embed'&&parentOrigin&&parent!==window)parent.postMessage({type:'driveassist',data:payload()},parentOrigin);}
+if(mode==='embed'){setInterval(send,5000);addEventListener('pagehide',send);send();}
+setInterval(tick,200);
+function renderTest(msg){if(!testBox)return;const d=payload();const norm=s=>s.replace(/\s+/g,' ').trim();
+ const st=document.querySelectorAll('[data-block="statement"]');const correct=st.length===1&&norm(st[0].textContent)===norm(CANONICAL);
+ const expected=condition==='A'?'slot-main':'slot-learn';const where=st[0]&&st[0].parentElement.id;
+ const integrity=correct&&where===expected;
+ testBox.textContent=`V4 TEST | ${condition} | ${layout} | img ${imgHeight}px\nstatement once / canonical: ${correct?'PASS':'FAIL'}\nlocation: ${where} (${integrity?'PASS':'FAIL'})\nFAQ rows: ${document.querySelectorAll('.faq-item').length}\nLearn More y: ${Math.round(document.getElementById('learn').getBoundingClientRect().top+scrollY)}px\nPage height: ${document.documentElement.scrollHeight}px\n\n`+Object.entries(d).map(([k,v])=>`${k}: ${v}`).join('\n')+(msg?'\n'+msg:'');
+}
+let testBox=null;if(test){testBox=document.createElement('aside');testBox.className='test-panel';testBox.style.whiteSpace='pre-wrap';document.body.appendChild(testBox);setInterval(()=>renderTest(),500);renderTest();}
+window.__DA_TEST__=DEV?{payload,statement:stmt,vis,faq:state}:undefined;
 })();

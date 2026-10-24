@@ -196,3 +196,14 @@ body {font-size:18px; line-height:1.62;}
 .info-card {background:#edf2f6;border-left:5px solid #12384a;border-radius:5px;}
 .site-footer {padding:42px 0;background:#122636;}
 @media (max-width:900px){.hero {height:470px}.hero-text{justify-content:center}.hero h1{font-size:52px}.hero-img{object-position:60% 50%}.hero-shade{background:linear-gradient(90deg,rgba(9,22,32,.88),rgba(9,22,32,.25))}.feature-photo{height:230px}.section-nav{gap:12px}.section-nav a{font-size:13px}}
+
+/* v4: independent FAQ rows, compact capability-to-statement adjacency */
+.faq-item + .faq-item { border-top: 1px solid var(--line); }
+.faq-item .acc-panel { padding: 4px 0 28px; }
+.faq-item .acc-panel p { margin: 0; max-width: 72ch; }
+.faq-item .acc-toggle { min-height: 68px; }
+#slot-main { margin-top: 32px; }
+#slot-learn { margin-bottom: 24px; }
+/* Study design review can compare image height by adding ?img=230 in development. */
+body[data-img-height="230"] .features .feature-photo { height:230px; }
+.device-notice { max-width:620px; margin:18vh auto; padding:25px; text-align:center; }

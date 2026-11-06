@@ -2,10 +2,6 @@
 
 Research webpage for a Texas State University study on how drivers understand information about driver-assistance features.
 
-**Status:** Approved by the Texas State University IRB (Protocol #11169, approved 11/05/2026).
-**Researchers:** Iman Jamshidi (PI) · Faculty Advisor: Dr. Subasish Das
-**Contact:** ijamshidi@txstate.edu
-
 > Halden Motors and DriveAssist are fictional and were created for this study.
 
 ## How it is used
@@ -29,6 +25,3 @@ Research webpage for a Texas State University study on how drivers understand in
 | `assets/js/config.js` | Settings (`dev: false` for data collection) |
 | `robots.txt` | Keeps the page out of search engines |
 
-## Credits
-- Font: Archivo (SIL Open Font License)
-- Images: AI-generated and edited for this research

@@ -1,8 +1,6 @@
 # Halden DriveAssist — Study Webpage
 
-Research webpage for a Texas State University study on how drivers understand information about driver-assistance features.
-
-> Halden Motors and DriveAssist are fictional and were created for this study.
+Research webpage on how drivers understand information about driver-assistance features.
 
 ## How it is used
 - Participants are recruited through Prolific.
